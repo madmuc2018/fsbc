@@ -143,6 +143,22 @@ ComposerController.postData = async function(guid, username) {
   return dataAsset;
 };
 
+ComposerController.postDataFull = async function(guid,originalName,mimetype,lastChangedAt,active,ownerID,lastChangedByID,authorizedUsersIDs,lastVersionID) {
+  const businessNetworkDefinition = await getConnection();
+  const factory = businessNetworkDefinition.getFactory();
+  const dataAsset = factory.newResource('org.dfs', 'Data', guid);
+  dataAsset.originalName = originalName;
+  dataAsset.mimetype = mimetype;
+  dataAsset.owner = factory.newRelationship('org.dfs', 'User', ownerID);
+  dataAsset.authorizedUsers = authorizedUsersIDs.map(id => factory.newRelationship('org.dfs', 'User', id));
+  dataAsset.lastChangedAt = lastChangedAt;
+  dataAsset.active = active;
+  dataAsset.lastChangedBy = factory.newRelationship('org.dfs', 'User', lastChangedByID);
+  dataAsset.lastVersionID = lastVersionID ?  factory.newRelationship('org.dfs', 'User', lastVersionID) : null;
+  await (await client.getAssetRegistry('org.dfs.Data')).add(dataAsset);
+  return dataAsset;
+};
+
 ComposerController.putData = async function(oldData, newGuid, username) {
   const businessNetworkDefinition = await getConnection();
   const factory = businessNetworkDefinition.getFactory();

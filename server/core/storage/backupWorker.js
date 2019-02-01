@@ -14,6 +14,8 @@ var runningBackup = false;
 
 async function backup() {
   const errors = [];
+  const pushError = (errors, type, id, error) => errors.push(`<BACKUP-WORKER> Could not backup ${type} ${id}, error: ${error}`);
+
   const {assets, participants} = await blockchainController.getBackup();
   const participantToUserSchema = ({username, hashedPassword, salt, role}) => ({username, hashedPassword, salt, role});
   const assetToAssetSchema = ({guid,originalName,mimetype,lastChangedAt,active,owner,lastChangedBy,authorizedUsers,lastVersion}) =>
@@ -27,7 +29,6 @@ async function backup() {
       authorizedUsers: authorizedUsers.map(u => u.$identifier),
       lastVersion: lastVersion ? lastVersion.$identifier: lastVersion
     });
-  const pushError = (errors, type, id, error) => errors.push(`<BACKUP-WORKER> Could not backup ${type} ${id}, error: ${error}`);
 
   utils.logger.info(`${assets.length} assets, ${assets.length} datas, ${participants.length} participants`);
 

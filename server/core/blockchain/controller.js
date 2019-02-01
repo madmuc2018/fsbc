@@ -12,6 +12,7 @@ BlockchainController.getAllData = composer.getAllData;
 BlockchainController.getLatestData = composer.getLatestData;
 BlockchainController.getData = composer.getData;
 BlockchainController.postData = composer.postData;
+BlockchainController.postDataFull = composer.postDataFull;
 BlockchainController.putData = composer.putData;
 BlockchainController.traceData = composer.traceData;
 BlockchainController.grantAccess = composer.grantAccess;

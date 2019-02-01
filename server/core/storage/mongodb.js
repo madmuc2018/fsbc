@@ -18,7 +18,7 @@ async function connectToDatabase() {
     return;
   }
 
-  const db = await mongoose.connect(`mongodb+srv://${process.env.ATLAS_CREDS}@coffeeproject-5irgt.mongodb.net/test?retryWrites=true`, { useNewUrlParser: true });
+  const db = await mongoose.connect(`mongodb+srv://${process.env.ATLAS_CREDS}@coffeeproject-5irgt.mongodb.net/dev?retryWrites=true`, { useNewUrlParser: true });
   isConnected = db.connections[0].readyState;
 }
 
@@ -38,6 +38,11 @@ MongoDBController.addOrUpdateParticipant = async function(data) {
 //   await User.findById(id);
 // };
 
+MongoDBController.getParticipants = async function() {
+  await connectToDatabase();
+  return await User.find();
+};
+
 MongoDBController.postDataAsset = async function(data) {
   await connectToDatabase();
   await DataAsset.create(data);
@@ -54,6 +59,11 @@ MongoDBController.addOrUpdateDataAsset = async function(data) {
 //   const response = await DataAsset.findById(id);
 // };
 
+MongoDBController.getDataAssets = async function() {
+  await connectToDatabase();
+  return await DataAsset.find();
+};
+
 MongoDBController.putDataAsset = async function(id, data) {
   await connectToDatabase();
   await DataAsset.update({guid: id}, data);
@@ -64,10 +74,21 @@ MongoDBController.postData = async function(data) {
   await Data.create(data);
 };
 
+MongoDBController.addOrUpdateData = async function(data) {
+  await connectToDatabase();
+  const {guid} = data;
+  await Data.findOneAndUpdate({guid}, data, {upsert: true});
+};
+
 // MongoDBController.getData = async function(id) {
 //   await connectToDatabase();
 //   const response = await Data.findById(id);
 // };
+
+MongoDBController.getDatas = async function() {
+  await connectToDatabase();
+  return await Data.find();
+};
 
 // async function testing() {
 //   const id = await MongoDBController.postUser({

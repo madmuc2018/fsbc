@@ -26,7 +26,7 @@ vagrant halt server-machine$1
 RAM=256 vagrant up server-machine$1
 vagrant ssh server-machine$1 -- -t 'cd /mnt/vagrant/server && npm run production'
 endef
-deploy:
+fresh-deploy:
 	vagrant destroy -f dev-machine
 	vagrant up dev-machine
 	vagrant ssh dev-machine -- -t '$(INIT_NVM) && cd /mnt/vagrant && make singlenode'
